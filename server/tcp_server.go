@@ -3,10 +3,12 @@ package server
 import (
 	"../protocol"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
 	"sync"
+	"time"
 )
 
 type client struct{
@@ -23,7 +25,7 @@ type TcpChatServer struct {
 
 var(
 	UnknownClient = errors.New("Unknown client")
-	DuplicateName = errors.New("Duplicate Name")
+	//DuplicateName = errors.New("Duplicate Name")
 )
 
 func NewServer() *TcpChatServer {
@@ -90,6 +92,11 @@ func (s *TcpChatServer) accept(conn net.Conn) *client{
 		name: conn.RemoteAddr().String(),
 		writer: protocol.NewCommandWriter(conn),
 	}
+	go s.Broadcast(protocol.MessageCommand{
+		Message: fmt.Sprintf("User@%s arrived",conn.RemoteAddr().String()),
+		Name: "system",
+		Time: time.Now().Format("2006-01-02 15:04:05"),
+	})
 	s.clients[client.name] = client
 	return client
 }
@@ -128,6 +135,7 @@ func (s *TcpChatServer) serve(client *client){
 				go s.Broadcast(protocol.MessageCommand{
 					Message: v.Message,
 					Name: client.name,
+					Time: time.Now().Format("2006-01-02 15:04:05"),
 				})
 			case protocol.NameCommand:
 				s.changeName(client, v.Message)

@@ -1,6 +1,8 @@
 package protocol
 
-import "errors"
+import (
+	"errors"
+)
 
 var(
 	UnknownCommand = errors.New("Unknown Command")
@@ -17,6 +19,7 @@ type NameCommand struct{
 type MessageCommand struct{
 	Name    string
 	Message string
+	Time    string
 }
 
 type ErrorCommand struct{

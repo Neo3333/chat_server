@@ -26,7 +26,7 @@ func (w *CommandWriter) Write(command interface{}) error{
 	case NameCommand:
 		err = w.writeString(fmt.Sprintf("NAME %v\n", v.Message))
 	case MessageCommand:
-		err = w.writeString(fmt.Sprintf("MESSAGE %v %v\n", v.Name, v.Message))
+		err = w.writeString(fmt.Sprintf("MESSAGE %v %v*%v\n", v.Name, v.Time, v.Message))
 	case ErrorCommand:
 		err = w.writeString(fmt.Sprintf("ERROR %v\n",v.Message))
 	default:

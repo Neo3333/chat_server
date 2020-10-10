@@ -21,10 +21,16 @@
   <component name="ChangeListManager">
     <list default="true" id="7338c92a-67ed-469d-8454-ba1004715fb1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/tcp_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/tcp_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/main/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/command.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/command.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/reader.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/reader.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/reader_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/reader_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/writer.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/writer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/writer_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/writer_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/tcp_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tui/chatview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/chatview.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tui/loginview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/loginview.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tui/tui.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/tui.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +75,15 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
-  <component name="RunManager" selected="Go Build.go build client  (1)">
+  <component name="RunManager" selected="Go Test.TestWriteCommand in writer_test.go">
+    <configuration name="go build chat.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="chat_server" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/samples/chat.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build client  (1)" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="chat_server" />
       <working_directory value="$PROJECT_DIR$" />
@@ -120,6 +134,7 @@
       <item itemvalue="Go Build.go build client  (1)" />
       <item itemvalue="Go Build.go build server" />
       <item itemvalue="Go Build.go build client " />
+      <item itemvalue="Go Build.go build chat.go" />
       <item itemvalue="Go Test.TestReaderCommand in reader_test.go" />
       <item itemvalue="Go Test.TestWriteCommand in writer_test.go" />
     </list>
@@ -127,8 +142,9 @@
       <list>
         <item itemvalue="Go Build.go build client " />
         <item itemvalue="Go Build.go build server" />
-        <item itemvalue="Go Test.TestReaderCommand in reader_test.go" />
         <item itemvalue="Go Test.TestWriteCommand in writer_test.go" />
+        <item itemvalue="Go Test.TestReaderCommand in reader_test.go" />
+        <item itemvalue="Go Build.go build chat.go" />
       </list>
     </recent_temporary>
   </component>
@@ -158,31 +174,31 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="304" y="163" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602359920350">
+    <state x="304" y="163" width="1071" height="726" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602368673756">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state x="304" y="163" key="#com.intellij.execution.impl.EditConfigurationsDialog/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602358947941" />
+    <state x="304" y="163" width="1071" height="726" key="#com.intellij.execution.impl.EditConfigurationsDialog/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602368673756" />
     <state x="304" y="163" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.956@0.23.1680.956" timestamp="1602359920350" />
-    <state width="1638" height="591" key="GridCell.Tab.0.bottom" timestamp="1602359863432">
+    <state width="1638" height="564" key="GridCell.Tab.0.bottom" timestamp="1602372165465">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="591" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602359180807" />
-    <state width="1638" height="591" key="GridCell.Tab.0.bottom/0.23.1680.956@0.23.1680.956" timestamp="1602359863432" />
-    <state width="1638" height="591" key="GridCell.Tab.0.center" timestamp="1602359863432">
+    <state width="1638" height="564" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602372165465" />
+    <state width="1638" height="700" key="GridCell.Tab.0.bottom/0.23.1680.956@0.23.1680.956" timestamp="1602365171984" />
+    <state width="1638" height="564" key="GridCell.Tab.0.center" timestamp="1602372165464">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="591" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602359180806" />
-    <state width="1638" height="591" key="GridCell.Tab.0.center/0.23.1680.956@0.23.1680.956" timestamp="1602359863432" />
-    <state width="1638" height="591" key="GridCell.Tab.0.left" timestamp="1602359863432">
+    <state width="1638" height="564" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602372165464" />
+    <state width="1638" height="700" key="GridCell.Tab.0.center/0.23.1680.956@0.23.1680.956" timestamp="1602365171983" />
+    <state width="1638" height="564" key="GridCell.Tab.0.left" timestamp="1602372165463">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="591" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602359180806" />
-    <state width="1638" height="591" key="GridCell.Tab.0.left/0.23.1680.956@0.23.1680.956" timestamp="1602359863432" />
-    <state width="1638" height="591" key="GridCell.Tab.0.right" timestamp="1602359863432">
+    <state width="1638" height="564" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602372165463" />
+    <state width="1638" height="700" key="GridCell.Tab.0.left/0.23.1680.956@0.23.1680.956" timestamp="1602365171983" />
+    <state width="1638" height="564" key="GridCell.Tab.0.right" timestamp="1602372165464">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="591" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602359180807" />
-    <state width="1638" height="591" key="GridCell.Tab.0.right/0.23.1680.956@0.23.1680.956" timestamp="1602359863432" />
+    <state width="1638" height="564" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602372165464" />
+    <state width="1638" height="700" key="GridCell.Tab.0.right/0.23.1680.956@0.23.1680.956" timestamp="1602365171984" />
     <state x="341" y="140" key="SettingsEditor" timestamp="1602351060276">
       <screen x="0" y="23" width="1680" height="956" />
     </state>

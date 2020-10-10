@@ -66,7 +66,7 @@ func (c *TcpChatClient) Send(command interface{}) error {
 }
 
 func (c *TcpChatClient) SetName(name string) error {
-	return c.Send(protocol.NameCommand{name})
+	return c.Send(protocol.NameCommand{Message: name})
 }
 
 func (c *TcpChatClient) SendMessage(message string) error {

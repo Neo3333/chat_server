@@ -1,6 +1,8 @@
 package tui
 
-import tui "github.com/marcusolsson/tui-go"
+import (
+	tui "github.com/marcusolsson/tui-go"
+)
 
 type LoginHandler func(string)
 
@@ -10,39 +12,62 @@ type LoginView struct {
 	loginHandler	LoginHandler
 }
 
+var logo = `     _____ __ ____  ___   ______________  
+    / ___// //_/\ \/ / | / / ____/_  __/  
+    \__ \/ ,<    \  /  |/ / __/   / /     
+   ___/ / /| |   / / /|  / /___  / /      
+  /____/_/ |_|  /_/_/ |_/_____/ /_/     `
+
 func NewLoginView() *LoginView {
-	// https://github.com/marcusolsson/tui-go/blob/master/example/login/main.go
+	view := &LoginView{}
+
 	user := tui.NewEntry()
 	user.SetFocused(true)
 	user.SetSizePolicy(tui.Maximum, tui.Maximum)
 
-	label := tui.NewLabel("Enter your name: ")
-	user.SetSizePolicy(tui.Expanding, tui.Maximum)
+	form := tui.NewGrid(0,0)
+	form.AppendRow(tui.NewLabel("User"))
+	form.AppendRow(user)
 
-	userBox := tui.NewHBox(
-		label,
-		user,
-	)
-	userBox.SetBorder(true)
-	userBox.SetSizePolicy(tui.Expanding, tui.Maximum)
+	//status := tui.NewStatusBar("Ready.")
 
-	view := &LoginView{}
-	view.frame = tui.NewVBox(
-		tui.NewSpacer(),
-		tui.NewPadder(-4, 0, tui.NewPadder(4, 0, userBox)),
-		tui.NewSpacer(),
-	)
-	view.Append(view.frame)
-
-	user.OnSubmit(func(e *tui.Entry) {
-		if e.Text() != "" {
-			if view.loginHandler != nil {
-				view.loginHandler(e.Text())
+	login := tui.NewButton("[Login]")
+	login.OnActivated(func(b *tui.Button) {
+		if user.Text() != ""{
+			if view.loginHandler != nil{
+				view.loginHandler(user.Text())
+				//status.SetText("Logged in.")
 			}
-
-			e.SetText("")
 		}
 	})
+	buttons := tui.NewHBox(
+		tui.NewSpacer(),
+		tui.NewPadder(2,0,login),
+	)
+
+	window := tui.NewVBox(
+		tui.NewPadder(10,1,tui.NewLabel(logo)),
+		tui.NewPadder(12,0,tui.NewLabel("Welcome to Skynet 1.0!, Please login in first.")),
+		tui.NewPadder(1,1,form),
+		buttons,
+	)
+	window.SetBorder(true)
+
+	wrapper := tui.NewVBox(
+		tui.NewSpacer(),
+		window,
+		tui.NewSpacer(),
+	)
+
+	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
+
+	root := tui.NewVBox(
+		content,
+	)
+	tui.DefaultFocusChain.Set(user, login)
+
+	view.frame = root
+	view.Append(view.frame)
 
 	return view
 }

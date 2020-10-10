@@ -27,12 +27,16 @@ func (r *CommandReader) Read() (interface{},error){
 		if err != nil{
 			return nil,err
 		}
+		time,err := r.reader.ReadString('*')
+		if err != nil{
+			return nil,err
+		}
 		message,err := r.reader.ReadString('\n')
 		if err != nil{
 			return nil,err
 		}
 		return MessageCommand{Name: user[:len(user)-1],Message:
-			    				message[:len(message)-1]},nil
+			    				message[:len(message)-1],Time: time[:len(time)-1]},nil
 	case "SEND ":
 		message,err := r.reader.ReadString('\n')
 		if err != nil{

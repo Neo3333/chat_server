@@ -2,6 +2,7 @@ package protocol_test
 
 import (
 	"bytes"
+	"log"
 	"testing"
 	"../protocol"
 )
@@ -16,6 +17,14 @@ func TestWriteCommand(t *testing.T){
 				protocol.SendCommand{"Hello"},
 			},
 			"SEND Hello\n",
+		},
+		{
+			[]interface{}{
+				protocol.MessageCommand{Message: "world",
+					Name: "michael",
+					Time: "2006-01-02 15:04:05"},
+			},
+			"MESSAGE michael 2006-01-02 15:04:05*world\n",
 		},
 	}
 
@@ -32,6 +41,8 @@ func TestWriteCommand(t *testing.T){
 		}
 
 		if buf.String() != test.result{
+			log.Println(len(buf.String()))
+			log.Println(len(test.result))
 			t.Errorf("Command output is not the same %v %v", buf.String(),test.result)
 		}
 	}
