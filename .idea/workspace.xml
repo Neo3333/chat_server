@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7338c92a-67ed-469d-8454-ba1004715fb1" name="Default Changelist" comment="" />
+    <list default="true" id="7338c92a-67ed-469d-8454-ba1004715fb1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/command.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/command.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/reader.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/reader.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol/writer.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/writer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/main/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tcp_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_server.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -1,10 +1,11 @@
 package server
 
 import (
+	"../protocol"
+	"errors"
 	"io"
 	"log"
 	"net"
-	"../protocol"
 	"sync"
 )
 
@@ -16,8 +17,23 @@ type client struct{
 
 type TcpChatServer struct {
 	listener    net.Listener
-	clients     []*client
+	//clients     []*client
+	clients     map[*client]string
+	names       map[string]bool
 	lock        *sync.Mutex
+}
+
+var(
+	UnknownClient = errors.New("Unknown client")
+	DuplicateName = errors.New("Duplicate Name")
+)
+
+func NewServer() *TcpChatServer {
+	return &TcpChatServer{
+		lock: &sync.Mutex{},
+		clients: make(map[*client]string),
+		names: make(map[string]bool),
+	}
 }
 
 func (s *TcpChatServer) Listen(address string) error{
@@ -46,13 +62,25 @@ func (s *TcpChatServer) Start(){
 }
 
 func (s *TcpChatServer) Broadcast(command interface{}) error{
-	for _,client := range s.clients{
+	for client,_ := range s.clients{
 		err := client.writer.Write(command)
+		//TODO 更好的错误处理机制
 		if err != nil{
-			log.Printf("Read error %v",err)
+			log.Printf("Connection lost on %s with error %v",
+				client.conn.RemoteAddr(),err)
 		}
 	}
 	return nil
+}
+
+func (s *TcpChatServer) Send(name string, command interface{}) error {
+	for client, _ := range s.clients {
+		if client.name == name {
+			return client.writer.Write(command)
+		}
+	}
+
+	return UnknownClient
 }
 
 func (s *TcpChatServer) accept(conn net.Conn) *client{
@@ -65,18 +93,24 @@ func (s *TcpChatServer) accept(conn net.Conn) *client{
 		name: conn.RemoteAddr().String(),
 		writer: protocol.NewCommandWriter(conn),
 	}
-	s.clients = append(s.clients)
+	s.clients[client] = client.name
+	s.names[client.name] = true
 	return client
 }
 
 func (s *TcpChatServer) remove(client *client){
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	for i,check := range s.clients{
-		if check == client{
-			s.clients = append(s.clients[:i],s.clients[i+1:]...)
-		}
+	_,ok := s.clients[client]
+	if (!ok){
+		//TODO 增加错误处理机制
+		//panic("Data Corruption")
+		log.Fatal("Data Corruption")
+		return;
 	}
+
+	delete(s.clients,client)
+	delete(s.names,client.name)
 	log.Printf("Closing connection from %v",client.conn.RemoteAddr().String())
 	_ = client.conn.Close()
 }
@@ -97,12 +131,32 @@ func (s *TcpChatServer) serve(client *client){
 					Name: client.name,
 				})
 			case protocol.NameCommand:
-				client.name = v.Message
+				err := s.changeName(client, v.Message)
+				if err != nil{
+					client.writer.Write(protocol.ErrorCommand{
+						Message: err.Error(),
+					})
+				}
 			}
 		}
 		if err == io.EOF{
 			break
 		}
 	}
+}
+
+func (s *TcpChatServer) changeName(client *client, newName string) error{
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	_,ok := s.names[newName]
+	if ok{
+		return DuplicateName
+	}
+	delete(s.names,client.name)
+	s.names[newName] = true
+
+	client.name = newName
+	s.clients[client] = newName
+	return nil
 }
 

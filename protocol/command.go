@@ -19,6 +19,10 @@ type MessageCommand struct{
 	Message string
 }
 
+type ErrorCommand struct{
+	Message string
+}
+
 
 
 

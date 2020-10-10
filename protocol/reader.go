@@ -47,6 +47,13 @@ func (r *CommandReader) Read() (interface{},error){
 		}
 		return NameCommand{Message: name[:len(name)-1]},err
 
+	case "ERROR ":
+		message,err := r.reader.ReadString('\n')
+		if err != nil{
+			return nil,err
+		}
+		return ErrorCommand{Message: message[:len(message)-1]},nil
+
 	default:
 		log.Printf("Unknown command: %v", commandName)
 	}
