@@ -9,6 +9,7 @@ type ChatClient interface {
 	Start()
 	Close()
 	Send(command interface{}) error
+	SendMessage(message string) error
 	SetName(message string) error
-	Incomming() chan protocol.MessageCommand
+	Incoming() chan protocol.MessageCommand
 }

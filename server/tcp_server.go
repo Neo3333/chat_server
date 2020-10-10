@@ -17,9 +17,7 @@ type client struct{
 
 type TcpChatServer struct {
 	listener    net.Listener
-	//clients     []*client
-	clients     map[*client]string
-	names       map[string]bool
+	clients     map[string]*client
 	lock        *sync.Mutex
 }
 
@@ -31,8 +29,7 @@ var(
 func NewServer() *TcpChatServer {
 	return &TcpChatServer{
 		lock: &sync.Mutex{},
-		clients: make(map[*client]string),
-		names: make(map[string]bool),
+		clients: make(map[string]*client),
 	}
 }
 
@@ -62,7 +59,7 @@ func (s *TcpChatServer) Start(){
 }
 
 func (s *TcpChatServer) Broadcast(command interface{}) error{
-	for client,_ := range s.clients{
+	for _,client := range s.clients{
 		err := client.writer.Write(command)
 		//TODO 更好的错误处理机制
 		if err != nil{
@@ -74,7 +71,7 @@ func (s *TcpChatServer) Broadcast(command interface{}) error{
 }
 
 func (s *TcpChatServer) Send(name string, command interface{}) error {
-	for client, _ := range s.clients {
+	for _, client := range s.clients {
 		if client.name == name {
 			return client.writer.Write(command)
 		}
@@ -93,24 +90,22 @@ func (s *TcpChatServer) accept(conn net.Conn) *client{
 		name: conn.RemoteAddr().String(),
 		writer: protocol.NewCommandWriter(conn),
 	}
-	s.clients[client] = client.name
-	s.names[client.name] = true
+	s.clients[client.name] = client
 	return client
 }
 
 func (s *TcpChatServer) remove(client *client){
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	_,ok := s.clients[client]
-	if (!ok){
+	c := s.clients[client.name]
+	if (c == nil){
 		//TODO 增加错误处理机制
 		//panic("Data Corruption")
 		log.Fatal("Data Corruption")
 		return;
 	}
 
-	delete(s.clients,client)
-	delete(s.names,client.name)
+	delete(s.clients,client.name)
 	log.Printf("Closing connection from %v",client.conn.RemoteAddr().String())
 	_ = client.conn.Close()
 }
@@ -121,7 +116,11 @@ func (s *TcpChatServer) serve(client *client){
 	for{
 		cmd, err := cmdReader.Read()
 		if err != nil && err != io.EOF{
-			log.Printf("Read error: %v",err)
+			log.Printf("Unknown command from: %s with error %v",
+				client.conn.RemoteAddr().String(),err)
+			_ = client.writer.Write(protocol.ErrorCommand{
+				Message: err.Error(),
+			})
 		}
 		if cmd != nil{
 			switch v := cmd.(type) {
@@ -131,12 +130,7 @@ func (s *TcpChatServer) serve(client *client){
 					Name: client.name,
 				})
 			case protocol.NameCommand:
-				err := s.changeName(client, v.Message)
-				if err != nil{
-					client.writer.Write(protocol.ErrorCommand{
-						Message: err.Error(),
-					})
-				}
+				s.changeName(client, v.Message)
 			}
 		}
 		if err == io.EOF{
@@ -145,18 +139,15 @@ func (s *TcpChatServer) serve(client *client){
 	}
 }
 
-func (s *TcpChatServer) changeName(client *client, newName string) error{
+func (s *TcpChatServer) changeName(client *client, newName string){
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	_,ok := s.names[newName]
-	if ok{
-		return DuplicateName
+	c := s.clients[newName]
+	if c != nil{
+		newName += "@" + client.conn.RemoteAddr().String()
 	}
-	delete(s.names,client.name)
-	s.names[newName] = true
-
+	delete(s.clients,client.name)
+	s.clients[newName] = client
 	client.name = newName
-	s.clients[client] = newName
-	return nil
 }
 
