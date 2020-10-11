@@ -9,9 +9,9 @@ type ChatClient interface {
 	Start()
 	Close()
 	Send(command interface{}) error
-	SendMessage(message string) error
-	SendMessagePrivate(message string, receiver string) error
+	SendMessage(message string, receiver string) error
 	SetName(message string) error
 	Incoming() chan protocol.MessageCommand
 	Errors() chan protocol.ErrorCommand
+	Done() <-chan struct{}
 }

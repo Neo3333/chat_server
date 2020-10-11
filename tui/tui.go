@@ -5,6 +5,9 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+var ch = make(chan struct{})
+var ptr *string
+
 func StartUi(c client.ChatClient) {
 
 	loginView := NewLoginView()
@@ -24,15 +27,16 @@ func StartUi(c client.ChatClient) {
 	loginView.OnLogin(func(username string) {
 		_ = c.SetName(username)
 		ui.SetWidget(chatView)
+
 		ui.SetFocusChain(chatChain)
 		loginChain = nil
+
+		ptr = &username
+		ch <- struct{}{}
 	})
 
-	chatView.OnSubmit(func(msg string) {
-		_ = c.SendMessage(msg)
-	})
-	chatView.OnPrivate(func(msg string, rec string) {
-		_ = c.SendMessagePrivate(msg,rec)
+	chatView.OnSubmit(func(msg string, rec string) {
+		_ = c.SendMessage(msg,rec)
 	})
 
 	go func() {
@@ -46,8 +50,19 @@ func StartUi(c client.ChatClient) {
 				ui.Update(func() {
 					chatView.AddMessage("system", err.Message, err.Time)
 				})
+			case <-c.Done():
+				break
 			}
 		}
+	}()
+
+	go func() {
+		<-ch
+		ui.Update(func() {
+			chatView.SetName(*ptr)
+		})
+		close(ch)
+		ptr = nil
 	}()
 
 	if err := ui.Run(); err != nil {

@@ -21,11 +21,12 @@
   <component name="ChangeListManager">
     <list default="true" id="7338c92a-67ed-469d-8454-ba1004715fb1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/tcp_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/tcp_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/tcp_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tui/chatview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/chatview.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tui/loginview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/loginview.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/UUIDGenerator_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/UUIDGenerator_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tui/tui.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/tui.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/UUIDGenerator.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/UUIDGenerator.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +71,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
-  <component name="RunManager" selected="Go Build.go build server">
+  <component name="RunManager" selected="Go Build.go build client  (1)">
     <configuration name="go build client  (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="chat_server" />
       <working_directory value="$PROJECT_DIR$" />
@@ -176,25 +177,25 @@
     </state>
     <state x="304" y="163" width="1071" height="726" key="#com.intellij.execution.impl.EditConfigurationsDialog/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602368673756" />
     <state x="304" y="163" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.956@0.23.1680.956" timestamp="1602401217902" />
-    <state width="1638" height="671" key="GridCell.Tab.0.bottom" timestamp="1602439515783">
+    <state width="1638" height="671" key="GridCell.Tab.0.bottom" timestamp="1602444531412">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="671" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602439515783" />
+    <state width="1638" height="671" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602444531412" />
     <state width="1638" height="671" key="GridCell.Tab.0.bottom/0.23.1680.956@0.23.1680.956" timestamp="1602433357418" />
-    <state width="1638" height="671" key="GridCell.Tab.0.center" timestamp="1602439515782">
+    <state width="1638" height="671" key="GridCell.Tab.0.center" timestamp="1602444531411">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="671" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602439515782" />
+    <state width="1638" height="671" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602444531411" />
     <state width="1638" height="671" key="GridCell.Tab.0.center/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
-    <state width="1638" height="671" key="GridCell.Tab.0.left" timestamp="1602439515782">
+    <state width="1638" height="671" key="GridCell.Tab.0.left" timestamp="1602444531411">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="671" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602439515782" />
+    <state width="1638" height="671" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602444531411" />
     <state width="1638" height="671" key="GridCell.Tab.0.left/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
-    <state width="1638" height="671" key="GridCell.Tab.0.right" timestamp="1602439515783">
+    <state width="1638" height="671" key="GridCell.Tab.0.right" timestamp="1602444531411">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="671" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602439515783" />
+    <state width="1638" height="671" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602444531411" />
     <state width="1638" height="671" key="GridCell.Tab.0.right/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
     <state width="1638" height="603" key="GridCell.Tab.1.bottom" timestamp="1602394740565">
       <screen x="0" y="23" width="1680" height="956" />

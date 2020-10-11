@@ -1,4 +1,5 @@
 package tui
+// ref: https://github.com/marcusolsson/tui-go/blob/master/example/chat/main.go
 
 import (
 	tui "github.com/marcusolsson/tui-go"
@@ -38,7 +39,6 @@ func NewLoginView() *LoginView {
 		if user.Text() != ""{
 			if view.loginHandler != nil{
 				view.loginHandler(user.Text())
-				//status.SetText("Logged in.")
 			}
 		}
 	})

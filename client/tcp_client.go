@@ -13,14 +13,17 @@ type TcpChatClient struct {
 	name 			string
 	cmdReader 		*protocol.CommandReader
 	cmdWriter 		*protocol.CommandWriter
+
 	incoming 		chan protocol.MessageCommand
 	errors   		chan protocol.ErrorCommand
+	done            chan struct{}
 }
 
 func NewClient() *TcpChatClient{
 	return &TcpChatClient{
 		incoming: make(chan protocol.MessageCommand),
 		errors: make(chan protocol.ErrorCommand),
+		done: make(chan struct{}),
 	}
 }
 
@@ -62,6 +65,7 @@ func (c *TcpChatClient) Close() {
 	_ = c.conn.Close()
 	close(c.incoming)
 	close(c.errors)
+	close(c.done)
 }
 
 func (c *TcpChatClient) Incoming() chan protocol.MessageCommand {
@@ -72,6 +76,11 @@ func (c *TcpChatClient) Errors() chan protocol.ErrorCommand  {
 	return c.errors
 }
 
+func (c *TcpChatClient) Done() <-chan struct{}{
+	return c.done
+}
+
+
 func (c *TcpChatClient) Send(command interface{}) error {
 	return c.cmdWriter.Write(command)
 }
@@ -80,16 +89,13 @@ func (c *TcpChatClient) SetName(name string) error {
 	return c.Send(protocol.NameCommand{Message: name})
 }
 
-func (c *TcpChatClient) SendMessage(message string) error {
-	return c.Send(protocol.SendCommand{
-		Message: message,
-		To: "*",
-	})
-}
-
-func (c *TcpChatClient) SendMessagePrivate(message string, receiver string) error{
+func (c *TcpChatClient) SendMessage(message string, receiver string) error {
+	if receiver == ""{
+		receiver = "*"
+	}
 	return c.Send(protocol.SendCommand{
 		Message: message,
 		To: receiver,
 	})
 }
+

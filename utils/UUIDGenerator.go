@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DEFAULT_UUID_CNT_CACHE = 128
+	DEFAULT_UUID_CNT_CACHE = 64
 )
 
 

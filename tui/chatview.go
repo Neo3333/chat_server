@@ -13,18 +13,17 @@ const(
 	RECEIVER = "TO: "
 )
 
-type SubmitMessageHandler func(string)
-type PrivateMessageHandler func(string,string)
+type SubmitMessageHandler func(string,string)
 
 var chatChain *tui.SimpleFocusChain
 
 type ChatView struct {
 	tui.Box
 	public   		bool
+	name 			*tui.StatusBar
 	frame    		*tui.Box
 	history  		*tui.Box
 	onSubmit 		SubmitMessageHandler
-	onPrivate		PrivateMessageHandler
 }
 
 type post struct {
@@ -55,7 +54,7 @@ func getClientIp() (string ,error) {
 }
 
 func NewChatView() *ChatView {
-	view := &ChatView{public: true}
+	view := &ChatView{public: true,name: tui.NewStatusBar("")}
 	chatChain = &tui.SimpleFocusChain{}
 
 	status := tui.NewStatusBar("MMode: Public.")
@@ -77,7 +76,9 @@ func NewChatView() *ChatView {
 
 	sidebar := tui.NewVBox(
 		tui.NewLabel("SKYNET COMMUNICATION"),
+		tui.NewLabel(""),
 		tui.NewLabel(fmt.Sprintf("IP: %v",ip)),
+		view.name,
 		tui.NewSpacer(),
 		change,
 	)
@@ -111,14 +112,14 @@ func NewChatView() *ChatView {
 		if view.public{
 			if e.Text() != "" {
 				if view.onSubmit != nil {
-					view.onSubmit(e.Text()[len(MESSAGE):])
+					view.onSubmit(e.Text()[len(MESSAGE):],"")
 				}
 				e.SetText(MESSAGE)
 			}
 		}else{
 			if e.Text() != "" && receive.Text() != ""{
-				if view.onPrivate != nil{
-					view.onPrivate(e.Text()[len(MESSAGE):],
+				if view.onSubmit != nil{
+					view.onSubmit(e.Text()[len(MESSAGE):],
 						receive.Text()[len(RECEIVER):])
 				}
 				e.SetText(MESSAGE)
@@ -141,17 +142,12 @@ func NewChatView() *ChatView {
 	view.frame.SetBorder(true)
 	view.Append(view.frame)
 
-	//view.chain.Set(input,change)
 	chatChain.Set(input,change,receive)
 	return view
 }
 
 func (c *ChatView) OnSubmit(handler SubmitMessageHandler) {
 	c.onSubmit = handler
-}
-
-func (c *ChatView) OnPrivate(handler PrivateMessageHandler){
-	c.onPrivate = handler
 }
 
 func (c *ChatView) AddMessage(user string, msg string, time string) {
@@ -161,3 +157,8 @@ func (c *ChatView) AddMessage(user string, msg string, time string) {
 		),
 	)
 }
+
+func (c *ChatView) SetName(name string)  {
+	c.name.SetText(fmt.Sprintf("Username: %s",name))
+}
+
