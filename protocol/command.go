@@ -10,6 +10,7 @@ var(
 
 type SendCommand struct{
 	Message string
+	To      string
 }
 
 type NameCommand struct{
@@ -24,6 +25,7 @@ type MessageCommand struct{
 
 type ErrorCommand struct{
 	Message string
+	Time    string
 }
 
 

@@ -6,10 +6,13 @@ import (
 
 type LoginHandler func(string)
 
+var loginChain *tui.SimpleFocusChain
+
 type LoginView struct {
 	tui.Box
 	frame		 	*tui.Box
 	loginHandler	LoginHandler
+
 }
 
 var logo = `     _____ __ ____  ___   ______________  
@@ -20,6 +23,7 @@ var logo = `     _____ __ ____  ___   ______________
 
 func NewLoginView() *LoginView {
 	view := &LoginView{}
+	loginChain = &tui.SimpleFocusChain{}
 
 	user := tui.NewEntry()
 	user.SetFocused(true)
@@ -64,7 +68,7 @@ func NewLoginView() *LoginView {
 	root := tui.NewVBox(
 		content,
 	)
-	tui.DefaultFocusChain.Set(user, login)
+	loginChain.Set(user,login)
 
 	view.frame = root
 	view.Append(view.frame)

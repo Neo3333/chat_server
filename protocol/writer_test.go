@@ -14,9 +14,10 @@ func TestWriteCommand(t *testing.T){
 	}{
 		{
 			[]interface{}{
-				protocol.SendCommand{"Hello"},
+				protocol.SendCommand{"Hello","*"},
+				protocol.ErrorCommand{"Oops","2006-01-02 15:04:05"},
 			},
-			"SEND Hello\n",
+			"SEND * Hello\nERROR 2006-01-02 15:04:05*Oops\n",
 		},
 		{
 			[]interface{}{

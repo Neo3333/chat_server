@@ -13,16 +13,18 @@ func TestReaderCommand(t *testing.T){
 		results []interface{}
 	}{
 		{
-			"SEND test\n",
+			"SEND * test\n",
 			[]interface{}{
-				protocol.SendCommand{Message: "test"},
+				protocol.SendCommand{Message: "test",To: "*"},
 			},
 		},
 		{
-			"MESSAGE user1 2020-02-02 00:00:00*hello\nMESSAGE user2 2006-01-02 15:04:05*world\n",
+			"MESSAGE user1 2020-02-02 00:00:00*hello\nMESSAGE user2 2006-01-02 15:04:05*world\n" +
+				"ERROR 2006-01-02 15:04:05*Oops\n",
 			[]interface{}{
 				protocol.MessageCommand{Name: "user1",Message: "hello", Time: "2020-02-02 00:00:00"},
 				protocol.MessageCommand{Name: "user2",Message: "world", Time: "2006-01-02 15:04:05"},
+				protocol.ErrorCommand{Message: "Oops",Time: "2006-01-02 15:04:05"},
 			},
 		},
 	}

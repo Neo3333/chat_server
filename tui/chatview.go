@@ -2,18 +2,29 @@ package tui
 // ref: https://github.com/marcusolsson/tui-go/blob/master/example/chat/main.go
 
 import(
+	"errors"
 	"fmt"
 	tui "github.com/marcusolsson/tui-go"
+	"net"
 	"time"
+)
+const(
+	MESSAGE = "Message: "
+	RECEIVER = "TO: "
 )
 
 type SubmitMessageHandler func(string)
+type PrivateMessageHandler func(string,string)
+
+var chatChain *tui.SimpleFocusChain
 
 type ChatView struct {
 	tui.Box
-	frame    *tui.Box
-	history  *tui.Box
-	onSubmit SubmitMessageHandler
+	public   		bool
+	frame    		*tui.Box
+	history  		*tui.Box
+	onSubmit 		SubmitMessageHandler
+	onPrivate		PrivateMessageHandler
 }
 
 type post struct {
@@ -26,16 +37,50 @@ var posts = []post{
 	{username: "system", message: "Welcome to Skynet!", time: "00:00"},
 }
 
+func getClientIp() (string ,error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "",err
+	}
+	for _, address := range addrs {
+		// 检查ip地址判断是否回环地址
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String(),nil
+			}
+
+		}
+	}
+	return "", errors.New("Can not find the client ip address!")
+}
+
 func NewChatView() *ChatView {
-	view := &ChatView{}
+	view := &ChatView{public: true}
+	chatChain = &tui.SimpleFocusChain{}
+
+	status := tui.NewStatusBar("MMode: Public.")
+	change := tui.NewButton("[Change Mode]")
+	change.OnActivated(func(b *tui.Button) {
+		if view.public{
+			status.SetText("MMode: Private.")
+			view.public = false
+		}else {
+			status.SetText("MMode: Public.")
+			view.public = true
+		}
+	})
+	//change.SetFocused(true)
+
+	ip, err := getClientIp()
+	if err != nil{
+		ip = "127.0.0.1"
+	}
+
 	sidebar := tui.NewVBox(
-		tui.NewLabel("CHANNELS"),
-		tui.NewLabel("general"),
-		tui.NewLabel("random"),
-		tui.NewLabel(""),
-		tui.NewLabel("DIRECT MESSAGES"),
-		tui.NewLabel("slackbot"),
+		tui.NewLabel("SKYNET COMMUNICATION"),
+		tui.NewLabel(fmt.Sprintf("IP: %v",ip)),
 		tui.NewSpacer(),
+		change,
 	)
 	sidebar.SetBorder(true)
 
@@ -57,35 +102,57 @@ func NewChatView() *ChatView {
 	input := tui.NewEntry()
 	input.SetFocused(true)
 	input.SetSizePolicy(tui.Expanding, tui.Maximum)
+	input.SetText(MESSAGE)
+
+	receive := tui.NewEntry()
+	receive.SetSizePolicy(tui.Minimum,tui.Maximum)
+	receive.SetText(RECEIVER)
 
 	input.OnSubmit(func(e *tui.Entry) {
-		if e.Text() != "" {
-			if view.onSubmit != nil {
-				view.onSubmit(e.Text())
+		if view.public{
+			if e.Text() != "" {
+				if view.onSubmit != nil {
+					view.onSubmit(e.Text()[len(MESSAGE):])
+				}
+				e.SetText(MESSAGE)
 			}
-
-			e.SetText("")
+		}else{
+			if e.Text() != "" && receive.Text() != ""{
+				if view.onPrivate != nil{
+					view.onPrivate(e.Text()[len(MESSAGE):],
+						receive.Text()[len(RECEIVER):])
+				}
+				e.SetText(MESSAGE)
+				receive.SetText(RECEIVER)
+			}
 		}
 	})
 
-	inputBox := tui.NewHBox(input)
+	inputBox := tui.NewHBox(receive,input)
 	inputBox.SetBorder(true)
 	inputBox.SetSizePolicy(tui.Expanding, tui.Maximum)
 
 	chat := tui.NewVBox(historyBox,inputBox)
 	chat.SetSizePolicy(tui.Expanding,tui.Expanding)
 
-	root := tui.NewHBox(chat)
+	content := tui.NewHBox(sidebar,chat,)
+	root := tui.NewVBox(content,status,)
 
 	view.frame = root
 	view.frame.SetBorder(true)
 	view.Append(view.frame)
 
+	//view.chain.Set(input,change)
+	chatChain.Set(input,change,receive)
 	return view
 }
 
 func (c *ChatView) OnSubmit(handler SubmitMessageHandler) {
 	c.onSubmit = handler
+}
+
+func (c *ChatView) OnPrivate(handler PrivateMessageHandler){
+	c.onPrivate = handler
 }
 
 func (c *ChatView) AddMessage(user string, msg string, time string) {

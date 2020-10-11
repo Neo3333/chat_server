@@ -20,6 +20,7 @@ var posts = []post{
 }
 
 func main() {
+	status := tui.NewStatusBar("Mode: Public.")
 	sidebar := tui.NewVBox(
 		tui.NewLabel("CHANNELS"),
 		tui.NewLabel("general"),
@@ -29,7 +30,8 @@ func main() {
 		tui.NewLabel("slackbot"),
 		tui.NewSpacer(),
 	)
-	sidebar.SetBorder(true)
+	sidebar.SetBorder(false)
+	sidebar.SetSizePolicy(tui.Maximum,tui.Expanding)
 
 	history := tui.NewVBox()
 
@@ -69,9 +71,13 @@ func main() {
 		input.SetText("")
 	})
 
-	root := tui.NewHBox(sidebar, chat)
+	root := tui.NewHBox(sidebar,chat)
+	//root.Append(chat)
+	root.SetBorder(true)
+	final := tui.NewVBox(root,status)
+	final.SetBorder(false)
 
-	ui, err := tui.New(root)
+	ui, err := tui.New(final)
 	if err != nil {
 		log.Fatal(err)
 	}

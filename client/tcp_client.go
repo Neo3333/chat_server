@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"time"
 )
 
 type TcpChatClient struct {
@@ -13,11 +14,13 @@ type TcpChatClient struct {
 	cmdReader *protocol.CommandReader
 	cmdWriter *protocol.CommandWriter
 	incoming chan protocol.MessageCommand
+	errors   chan protocol.ErrorCommand
 }
 
 func NewClient() *TcpChatClient{
 	return &TcpChatClient{
 		incoming: make(chan protocol.MessageCommand),
+		errors: make(chan protocol.ErrorCommand),
 	}
 }
 
@@ -45,9 +48,13 @@ func (c *TcpChatClient) Start(){
 			case protocol.MessageCommand:
 				c.incoming <- v
 			case protocol.ErrorCommand:
-				log.Printf("Error from the server %s",v.Message)
+				//log.Printf("Error from the server %s",v.Message)
+				c.errors <- v
 			default:
-				log.Printf("Unknown command %v",v)
+				c.errors <- protocol.ErrorCommand{
+				Message: "Unknow3n Command",
+				Time: time.Now().Format("2006-01-02 15:04:05"),
+				}
 			}
 		}
 	}
@@ -61,6 +68,10 @@ func (c *TcpChatClient) Incoming() chan protocol.MessageCommand {
 	return c.incoming
 }
 
+func (c *TcpChatClient) Errors() chan protocol.ErrorCommand  {
+	return c.errors
+}
+
 func (c *TcpChatClient) Send(command interface{}) error {
 	return c.cmdWriter.Write(command)
 }
@@ -72,5 +83,13 @@ func (c *TcpChatClient) SetName(name string) error {
 func (c *TcpChatClient) SendMessage(message string) error {
 	return c.Send(protocol.SendCommand{
 		Message: message,
+		To: "*",
+	})
+}
+
+func (c *TcpChatClient) SendMessagePrivate(message string, receiver string) error{
+	return c.Send(protocol.SendCommand{
+		Message: message,
+		To: receiver,
 	})
 }

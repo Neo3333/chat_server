@@ -73,12 +73,9 @@ func (s *TcpChatServer) Broadcast(command interface{}) error{
 }
 
 func (s *TcpChatServer) Send(name string, command interface{}) error {
-	for _, client := range s.clients {
-		if client.name == name {
-			return client.writer.Write(command)
-		}
+	if c := s.clients[name]; c != nil{
+		return c.writer.Write(command)
 	}
-
 	return UnknownClient
 }
 
@@ -123,7 +120,7 @@ func (s *TcpChatServer) serve(client *client){
 	for{
 		cmd, err := cmdReader.Read()
 		if err != nil && err != io.EOF{
-			log.Printf("Unknown command from: %s with error %v",
+			log.Printf("Unknown command from: %v with error %v",
 				client.conn.RemoteAddr().String(),err)
 			_ = client.writer.Write(protocol.ErrorCommand{
 				Message: err.Error(),
@@ -132,11 +129,26 @@ func (s *TcpChatServer) serve(client *client){
 		if cmd != nil{
 			switch v := cmd.(type) {
 			case protocol.SendCommand:
-				go s.Broadcast(protocol.MessageCommand{
+				msg := protocol.MessageCommand{
 					Message: v.Message,
 					Name: client.name,
 					Time: time.Now().Format("2006-01-02 15:04:05"),
-				})
+				}
+				switch v.To {
+				case "*":
+					go s.Broadcast(msg)
+				default:
+					msg.Message = "[PRIVATE]"+msg.Message
+					err := s.Send(v.To, msg)
+					if err != nil{
+						client.writer.Write(protocol.ErrorCommand{
+							Message: err.Error(),
+							Time: time.Now().Format("2006-01-02 15:04:05"),
+						})
+					}else{
+						_ = client.writer.Write(msg)
+					}
+				}
 			case protocol.NameCommand:
 				s.changeName(client, v.Message)
 			}

@@ -5,7 +5,8 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
-func StartUi(c client.ChatClient){
+func StartUi(c client.ChatClient) {
+
 	loginView := NewLoginView()
 	chatView := NewChatView()
 
@@ -18,22 +19,40 @@ func StartUi(c client.ChatClient){
 
 	ui.SetKeybinding("Esc", quit)
 	ui.SetKeybinding("Ctrl+c", quit)
+	ui.SetFocusChain(loginChain)
 
 	loginView.OnLogin(func(username string) {
 		_ = c.SetName(username)
 		ui.SetWidget(chatView)
+		ui.SetFocusChain(chatChain)
+		loginChain = nil
 	})
 
 	chatView.OnSubmit(func(msg string) {
 		_ = c.SendMessage(msg)
 	})
+	chatView.OnPrivate(func(msg string, rec string) {
+		_ = c.SendMessagePrivate(msg,rec)
+	})
 
 	go func() {
-		for msg := range c.Incoming() {
-			// we need to make the change via ui update to make sure the ui is repaint correctly
-			ui.Update(func() {
-				chatView.AddMessage(msg.Name, msg.Message, msg.Time)
-			})
+		//for msg := range c.Incoming() {
+		//	// we need to make the change via ui update to make sure the ui is repaint correctly
+		//	ui.Update(func() {
+		//		chatView.AddMessage(msg.Name, msg.Message, msg.Time)
+		//	})
+		//}
+		for{
+			select {
+			case msg := <-c.Incoming():
+				ui.Update(func() {
+					chatView.AddMessage(msg.Name, msg.Message, msg.Time)
+				})
+			case err := <-c.Errors():
+				ui.Update(func() {
+					chatView.AddMessage("system", err.Message, err.Time)
+				})
+			}
 		}
 	}()
 
@@ -41,3 +60,4 @@ func StartUi(c client.ChatClient){
 		panic(err)
 	}
 }
+
