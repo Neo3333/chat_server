@@ -25,11 +25,9 @@ type TcpChatServer struct {
 	generator   *utils.UUIDGenerator
 }
 
-var(
-	UnknownClient = errors.New("Unknown client")
-)
-
+var UnknownClient = errors.New("Unknown client")
 var loadGeneratorOnce sync.Once
+const SYSTEM = "system"
 
 func NewServer() *TcpChatServer {
 	return &TcpChatServer{
@@ -49,6 +47,7 @@ func (s *TcpChatServer) Listen(address string) error{
 
 func (s *TcpChatServer) Close(){
 	_ = s.listener.Close()
+	s.generator.Close()
 }
 
 func (s *TcpChatServer) Start(){
@@ -94,7 +93,7 @@ func (s *TcpChatServer) accept(conn net.Conn) *client{
 	}
 	go s.Broadcast(protocol.MessageCommand{
 		Message: fmt.Sprintf("User@%s arrived",conn.RemoteAddr().String()),
-		Name: "system",
+		Name: SYSTEM,
 		Time: time.Now().Format("2006-01-02 15:04:05"),
 	})
 	s.clients[client.name] = client
@@ -107,11 +106,14 @@ func (s *TcpChatServer) remove(client *client){
 	c := s.clients[client.name]
 	if (c == nil){
 		//TODO 增加错误处理机制
-		//panic("Data Corruption")
 		log.Fatal("Data Corruption")
 		return;
 	}
-
+	go s.Broadcast(protocol.MessageCommand{
+		Message: fmt.Sprintf("User<%s> left Skynet",client.name),
+		Name: SYSTEM,
+		Time: time.Now().Format("2006-01-02 15:04:05"),
+	})
 	delete(s.clients,client.name)
 	log.Printf("Closing connection from %v",client.conn.RemoteAddr().String())
 	_ = client.conn.Close()
@@ -145,9 +147,9 @@ func (s *TcpChatServer) serve(cli *client){
 					go func(c *client, rec string, msg interface{}) {
 						err := s.Send(v.To, msg)
 						if err != nil{
-							c.writer.Write(protocol.ErrorCommand{
+							_ = c.writer.Write(protocol.ErrorCommand{
 								Message: err.Error(),
-								Time: time.Now().Format("2006-01-02 15:04:05"),
+								Time:    time.Now().Format("2006-01-02 15:04:05"),
 							})
 						}else{
 							_ = c.writer.Write(msg)
@@ -169,7 +171,7 @@ func (s *TcpChatServer) changeName(client *client, newName string){
 	defer s.lock.Unlock()
 	name := newName
 	c := s.clients[name]
-	for c != nil{
+	for name=="system" || c != nil{
 		loadGeneratorOnce.Do(s.startGenerator)
 		name = newName + "#" + s.generator.Get()
 		c = s.clients[name]

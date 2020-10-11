@@ -9,12 +9,12 @@ import (
 )
 
 type TcpChatClient struct {
-	conn net.Conn
-	name string
-	cmdReader *protocol.CommandReader
-	cmdWriter *protocol.CommandWriter
-	incoming chan protocol.MessageCommand
-	errors   chan protocol.ErrorCommand
+	conn 			net.Conn
+	name 			string
+	cmdReader 		*protocol.CommandReader
+	cmdWriter 		*protocol.CommandWriter
+	incoming 		chan protocol.MessageCommand
+	errors   		chan protocol.ErrorCommand
 }
 
 func NewClient() *TcpChatClient{
@@ -42,13 +42,11 @@ func (c *TcpChatClient) Start(){
 		}else if err != nil{
 			log.Printf("Read error %v", err)
 		}
-
 		if cmd != nil{
 			switch v := cmd.(type) {
 			case protocol.MessageCommand:
 				c.incoming <- v
 			case protocol.ErrorCommand:
-				//log.Printf("Error from the server %s",v.Message)
 				c.errors <- v
 			default:
 				c.errors <- protocol.ErrorCommand{
@@ -62,6 +60,8 @@ func (c *TcpChatClient) Start(){
 
 func (c *TcpChatClient) Close() {
 	_ = c.conn.Close()
+	close(c.incoming)
+	close(c.errors)
 }
 
 func (c *TcpChatClient) Incoming() chan protocol.MessageCommand {

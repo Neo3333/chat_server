@@ -11,4 +11,5 @@ func TestNewUUIDGenerator(t *testing.T) {
 	for i := 0; i < 50; i++{
 		fmt.Println(UUIDFactory.Get())
 	}
+	UUIDFactory.Close()
 }

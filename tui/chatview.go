@@ -69,7 +69,6 @@ func NewChatView() *ChatView {
 			view.public = true
 		}
 	})
-	//change.SetFocused(true)
 
 	ip, err := getClientIp()
 	if err != nil{

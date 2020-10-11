@@ -15,7 +15,7 @@ type LoginView struct {
 
 }
 
-var logo = `     _____ __ ____  ___   ______________  
+const logo = `     _____ __ ____  ___   ______________  
     / ___// //_/\ \/ / | / / ____/_  __/  
     \__ \/ ,<    \  /  |/ / __/   / /     
    ___/ / /| |   / / /|  / /___  / /      
@@ -32,8 +32,6 @@ func NewLoginView() *LoginView {
 	form := tui.NewGrid(0,0)
 	form.AppendRow(tui.NewLabel("User"))
 	form.AppendRow(user)
-
-	//status := tui.NewStatusBar("Ready.")
 
 	login := tui.NewButton("[Login]")
 	login.OnActivated(func(b *tui.Button) {
