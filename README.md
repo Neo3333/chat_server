@@ -3,7 +3,7 @@
 
 ##### 简介：
 
-**SKYNET **是完全利用 **Go** 开发的聊天室程序，开发的初衷是为了熟悉 **Go** 语言对多线程以及网络服务器开发的支持。**SKYNET** 的客户端UI使用了 **tui-go**, 详情请参考 `https://github.com/marcusolsson/tui-go`。**SKYNET** 服务端主要参照 The Go Programming Language 8.10章节。
+**SKYNET** 是完全利用 **Go** 开发的聊天室程序，开发的初衷是为了熟悉 **Go** 语言对多线程以及网络服务器开发的支持。**SKYNET** 的客户端UI使用了 **tui-go**, 详情请参考 `https://github.com/marcusolsson/tui-go`。**SKYNET** 服务端主要参照 The Go Programming Language 8.10章节。
 
 ##### 客户端使用方法：
 
