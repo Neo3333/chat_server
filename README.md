@@ -9,7 +9,7 @@
 
 * 首先使用 `git clone` 将此文件夹下载到本地；
 * `cd ./tui/cmd/ `来到这个目录下；
-* 编译主程序 `go build main.go`；如果本地没有 **Go **环境请在 `https://golang.org/dl/`下载；
+* 编译主程序 `go build main.go`；如果本地没有 **Go**环境请在 `https://golang.org/dl/`下载；
 * 运行编译好的 `main` 程序，`./main -server server-address:8000`
 
 ##### 服务端使用方法：
