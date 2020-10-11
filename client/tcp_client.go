@@ -52,7 +52,7 @@ func (c *TcpChatClient) Start(){
 				c.errors <- v
 			default:
 				c.errors <- protocol.ErrorCommand{
-				Message: "Unknow3n Command",
+				Message: "Unknown Command",
 				Time: time.Now().Format("2006-01-02 15:04:05"),
 				}
 			}

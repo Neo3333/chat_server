@@ -21,17 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7338c92a-67ed-469d-8454-ba1004715fb1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/tcp_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/tcp_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protocol/command.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/command.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protocol/reader.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/reader.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protocol/reader_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/reader_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protocol/writer.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/writer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protocol/writer_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/protocol/writer_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/samples/chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/samples/chat.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/tcp_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tui/chatview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/chatview.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tui/loginview.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/loginview.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tui/tui.go" beforeDir="false" afterPath="$PROJECT_DIR$/tui/tui.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,7 +68,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
-  <component name="RunManager" selected="Go Build.go build server">
+  <component name="RunManager" selected="Go Build.go build client (2)">
     <configuration name="go build client  (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="chat_server" />
       <working_directory value="$PROJECT_DIR$" />
@@ -96,20 +87,22 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build multiview.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="chat_server" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/samples/multiview.go" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
     <configuration name="go build server" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="chat_server" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/server/main/main.go" />
       <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestNewUUIDGenerator in UUIDGenerator_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="chat_server" />
+      <working_directory value="$PROJECT_DIR$/utils" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/utils/UUIDGenerator_test.go" />
+      <pattern value="^\QTestNewUUIDGenerator\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestReaderCommand in reader_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -136,17 +129,17 @@
       <item itemvalue="Go Build.go build client (2)" />
       <item itemvalue="Go Build.go build client  (1)" />
       <item itemvalue="Go Build.go build server" />
-      <item itemvalue="Go Build.go build multiview.go" />
       <item itemvalue="Go Test.TestWriteCommand in writer_test.go" />
       <item itemvalue="Go Test.TestReaderCommand in reader_test.go" />
+      <item itemvalue="Go Test.TestNewUUIDGenerator in UUIDGenerator_test.go" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build client  (1)" />
         <item itemvalue="Go Build.go build server" />
+        <item itemvalue="Go Test.TestNewUUIDGenerator in UUIDGenerator_test.go" />
         <item itemvalue="Go Test.TestReaderCommand in reader_test.go" />
         <item itemvalue="Go Test.TestWriteCommand in writer_test.go" />
-        <item itemvalue="Go Build.go build multiview.go" />
       </list>
     </recent_temporary>
   </component>
@@ -181,26 +174,26 @@
     </state>
     <state x="304" y="163" width="1071" height="726" key="#com.intellij.execution.impl.EditConfigurationsDialog/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602368673756" />
     <state x="304" y="163" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.956@0.23.1680.956" timestamp="1602401217902" />
-    <state width="1638" height="671" key="GridCell.Tab.0.bottom" timestamp="1602432057047">
+    <state width="1638" height="671" key="GridCell.Tab.0.bottom" timestamp="1602437166350">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="593" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602383300088" />
-    <state width="1638" height="671" key="GridCell.Tab.0.bottom/0.23.1680.956@0.23.1680.956" timestamp="1602432057047" />
-    <state width="1638" height="671" key="GridCell.Tab.0.center" timestamp="1602432057045">
+    <state width="1638" height="671" key="GridCell.Tab.0.bottom/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602437166350" />
+    <state width="1638" height="671" key="GridCell.Tab.0.bottom/0.23.1680.956@0.23.1680.956" timestamp="1602433357418" />
+    <state width="1638" height="671" key="GridCell.Tab.0.center" timestamp="1602437166349">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="593" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602383300087" />
-    <state width="1638" height="671" key="GridCell.Tab.0.center/0.23.1680.956@0.23.1680.956" timestamp="1602432057045" />
-    <state width="1638" height="671" key="GridCell.Tab.0.left" timestamp="1602432057044">
+    <state width="1638" height="671" key="GridCell.Tab.0.center/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602437166349" />
+    <state width="1638" height="671" key="GridCell.Tab.0.center/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
+    <state width="1638" height="671" key="GridCell.Tab.0.left" timestamp="1602437166348">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="593" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602383300087" />
-    <state width="1638" height="671" key="GridCell.Tab.0.left/0.23.1680.956@0.23.1680.956" timestamp="1602432057044" />
-    <state width="1638" height="671" key="GridCell.Tab.0.right" timestamp="1602432057046">
+    <state width="1638" height="671" key="GridCell.Tab.0.left/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602437166348" />
+    <state width="1638" height="671" key="GridCell.Tab.0.left/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
+    <state width="1638" height="671" key="GridCell.Tab.0.right" timestamp="1602437166349">
       <screen x="0" y="23" width="1680" height="956" />
     </state>
-    <state width="1638" height="593" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602383300088" />
-    <state width="1638" height="671" key="GridCell.Tab.0.right/0.23.1680.956@0.23.1680.956" timestamp="1602432057046" />
+    <state width="1638" height="671" key="GridCell.Tab.0.right/-131.-1057.1920.1057/0.23.1680.956@0.23.1680.956" timestamp="1602437166349" />
+    <state width="1638" height="671" key="GridCell.Tab.0.right/0.23.1680.956@0.23.1680.956" timestamp="1602433357417" />
     <state width="1638" height="603" key="GridCell.Tab.1.bottom" timestamp="1602394740565">
       <screen x="0" y="23" width="1680" height="956" />
     </state>

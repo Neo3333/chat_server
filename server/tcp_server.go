@@ -9,6 +9,7 @@ import (
 	"net"
 	"sync"
 	"time"
+	"../utils"
 )
 
 type client struct{
@@ -21,12 +22,14 @@ type TcpChatServer struct {
 	listener    net.Listener
 	clients     map[string]*client
 	lock        *sync.Mutex
+	generator   *utils.UUIDGenerator
 }
 
 var(
 	UnknownClient = errors.New("Unknown client")
-	//DuplicateName = errors.New("Duplicate Name")
 )
+
+var loadGeneratorOnce sync.Once
 
 func NewServer() *TcpChatServer {
 	return &TcpChatServer{
@@ -114,15 +117,15 @@ func (s *TcpChatServer) remove(client *client){
 	_ = client.conn.Close()
 }
 
-func (s *TcpChatServer) serve(client *client){
-	cmdReader := protocol.NewCommandReader(client.conn)
-	defer s.remove(client)
+func (s *TcpChatServer) serve(cli *client){
+	cmdReader := protocol.NewCommandReader(cli.conn)
+	defer s.remove(cli)
 	for{
 		cmd, err := cmdReader.Read()
 		if err != nil && err != io.EOF{
 			log.Printf("Unknown command from: %v with error %v",
-				client.conn.RemoteAddr().String(),err)
-			_ = client.writer.Write(protocol.ErrorCommand{
+				cli.conn.RemoteAddr().String(),err)
+			_ = cli.writer.Write(protocol.ErrorCommand{
 				Message: err.Error(),
 			})
 		}
@@ -131,26 +134,28 @@ func (s *TcpChatServer) serve(client *client){
 			case protocol.SendCommand:
 				msg := protocol.MessageCommand{
 					Message: v.Message,
-					Name: client.name,
+					Name: cli.name,
 					Time: time.Now().Format("2006-01-02 15:04:05"),
 				}
 				switch v.To {
 				case "*":
 					go s.Broadcast(msg)
 				default:
-					msg.Message = "[PRIVATE]"+msg.Message
-					err := s.Send(v.To, msg)
-					if err != nil{
-						client.writer.Write(protocol.ErrorCommand{
-							Message: err.Error(),
-							Time: time.Now().Format("2006-01-02 15:04:05"),
-						})
-					}else{
-						_ = client.writer.Write(msg)
-					}
+					msg.Name = "[PRIVATE]"+msg.Name
+					go func(c *client, rec string, msg interface{}) {
+						err := s.Send(v.To, msg)
+						if err != nil{
+							c.writer.Write(protocol.ErrorCommand{
+								Message: err.Error(),
+								Time: time.Now().Format("2006-01-02 15:04:05"),
+							})
+						}else{
+							_ = c.writer.Write(msg)
+						}
+					}(cli,v.To,msg)
 				}
 			case protocol.NameCommand:
-				s.changeName(client, v.Message)
+				s.changeName(cli, v.Message)
 			}
 		}
 		if err == io.EOF{
@@ -162,12 +167,20 @@ func (s *TcpChatServer) serve(client *client){
 func (s *TcpChatServer) changeName(client *client, newName string){
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	c := s.clients[newName]
-	if c != nil{
-		newName += "@" + client.conn.RemoteAddr().String()
+	name := newName
+	c := s.clients[name]
+	for c != nil{
+		loadGeneratorOnce.Do(s.startGenerator)
+		name = newName + "#" + s.generator.Get()
+		c = s.clients[name]
 	}
 	delete(s.clients,client.name)
-	s.clients[newName] = client
-	client.name = newName
+	s.clients[name] = client
+	client.name = name
 }
+
+func (s *TcpChatServer) startGenerator(){
+	s.generator = utils.NewUUIDGenerator("")
+}
+
 

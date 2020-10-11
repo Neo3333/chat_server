@@ -36,12 +36,6 @@ func StartUi(c client.ChatClient) {
 	})
 
 	go func() {
-		//for msg := range c.Incoming() {
-		//	// we need to make the change via ui update to make sure the ui is repaint correctly
-		//	ui.Update(func() {
-		//		chatView.AddMessage(msg.Name, msg.Message, msg.Time)
-		//	})
-		//}
 		for{
 			select {
 			case msg := <-c.Incoming():
