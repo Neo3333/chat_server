@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+/**
+version 1.0
+*/
+
 type TcpChatClient struct {
 	conn 			net.Conn
 	name 			string

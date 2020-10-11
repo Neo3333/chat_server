@@ -5,6 +5,10 @@ import (
 	"io"
 )
 
+/**
+version 1.0
+*/
+
 type CommandWriter struct {
 	writer io.Writer
 }

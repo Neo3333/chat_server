@@ -1,5 +1,9 @@
 package protocol
 
+/**
+version 1.0
+ */
+
 import (
 	"errors"
 )

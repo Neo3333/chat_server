@@ -8,6 +8,11 @@ import(
 	"net"
 	"time"
 )
+
+/**
+version 1.0
+*/
+
 const(
 	MESSAGE = "Message: "
 	RECEIVER = "TO: "

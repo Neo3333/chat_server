@@ -2,7 +2,9 @@ package client
 
 import "../protocol"
 
-type messageHandler func(string)
+/**
+version 1.0
+*/
 
 type ChatClient interface {
 	Dial(address string) error

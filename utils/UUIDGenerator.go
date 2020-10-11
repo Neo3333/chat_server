@@ -5,6 +5,10 @@ import (
 	"math/rand"
 )
 
+/**
+version 1.0
+*/
+
 const (
 	DEFAULT_UUID_CNT_CACHE = 64
 )

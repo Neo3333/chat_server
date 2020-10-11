@@ -11,6 +11,9 @@ import (
 	"time"
 	"../utils"
 )
+/**
+version 1.0
+*/
 
 type client struct{
 	conn        net.Conn

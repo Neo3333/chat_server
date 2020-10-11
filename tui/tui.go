@@ -5,6 +5,10 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+/**
+version 1.0
+*/
+
 var ch = make(chan struct{})
 var ptr *string
 

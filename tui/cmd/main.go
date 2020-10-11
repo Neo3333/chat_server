@@ -7,6 +7,10 @@ import (
 	"../../tui"
 )
 
+/**
+version 1.0
+*/
+
 func main(){
 	address := flag.String("server","","server address to connect")
 	flag.Parse()

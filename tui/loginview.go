@@ -5,6 +5,10 @@ import (
 	tui "github.com/marcusolsson/tui-go"
 )
 
+/**
+version 1.0
+*/
+
 type LoginHandler func(string)
 
 var loginChain *tui.SimpleFocusChain

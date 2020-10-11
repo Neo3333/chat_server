@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+/**
+version 1.0
+*/
+
 func main() {
 	var s server.ChatServer
 	s = server.NewServer()
