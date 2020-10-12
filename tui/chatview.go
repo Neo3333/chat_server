@@ -14,8 +14,8 @@ version 1.0
 */
 
 const(
-	MESSAGE = "Message: "
-	RECEIVER = "TO: "
+	MESSAGE = "MMessage: <type your message here>"
+	RECEIVER = "Receiver: <only in private mode>"
 )
 
 type SubmitMessageHandler func(string,string)
@@ -26,6 +26,7 @@ type ChatView struct {
 	tui.Box
 	public   		bool
 	name 			*tui.StatusBar
+	serverIp        *tui.StatusBar
 	frame    		*tui.Box
 	history  		*tui.Box
 	onSubmit 		SubmitMessageHandler
@@ -59,7 +60,7 @@ func getClientIp() (string ,error) {
 }
 
 func NewChatView() *ChatView {
-	view := &ChatView{public: true,name: tui.NewStatusBar("")}
+	view := &ChatView{public: true,name: tui.NewStatusBar(""),serverIp: tui.NewStatusBar("")}
 	chatChain = &tui.SimpleFocusChain{}
 
 	status := tui.NewStatusBar("MMode: Public.")
@@ -80,9 +81,10 @@ func NewChatView() *ChatView {
 	}
 
 	sidebar := tui.NewVBox(
-		tui.NewLabel("SKYNET COMMUNICATION"),
+		tui.NewLabel("SKYNET COMMUNICATION      "),
 		tui.NewLabel(""),
-		tui.NewLabel(fmt.Sprintf("IP: %v",ip)),
+		tui.NewLabel(fmt.Sprintf("Client IP: %v",ip)),
+		view.serverIp,
 		view.name,
 		tui.NewSpacer(),
 		change,
@@ -107,37 +109,45 @@ func NewChatView() *ChatView {
 	input := tui.NewEntry()
 	input.SetFocused(true)
 	input.SetSizePolicy(tui.Expanding, tui.Maximum)
-	input.SetText(MESSAGE)
 
 	receive := tui.NewEntry()
 	receive.SetSizePolicy(tui.Minimum,tui.Maximum)
-	receive.SetText(RECEIVER)
+
+	form := tui.NewGrid(0, 0)
+	title1,title2 := tui.NewLabel(RECEIVER),tui.NewLabel(MESSAGE)
+	title1.SetSizePolicy(tui.Expanding,tui.Maximum)
+	title2.SetSizePolicy(tui.Minimum,tui.Maximum)
+
+	form.AppendRow(title1,title2)
+	form.AppendRow(
+		receive,
+		tui.NewPadder(1,0,input))
+	form.SetBorder(true)
+	form.SetSizePolicy(tui.Expanding,tui.Maximum)
+	form.SetColumnStretch(0,1)
+	form.SetColumnStretch(1,3)
+
 
 	input.OnSubmit(func(e *tui.Entry) {
 		if view.public{
 			if e.Text() != "" {
 				if view.onSubmit != nil {
-					view.onSubmit(e.Text()[len(MESSAGE):],"")
+					view.onSubmit(e.Text(),"")
 				}
-				e.SetText(MESSAGE)
+				e.SetText("")
+				receive.SetText("")
 			}
 		}else{
 			if e.Text() != "" && receive.Text() != ""{
 				if view.onSubmit != nil{
-					view.onSubmit(e.Text()[len(MESSAGE):],
-						receive.Text()[len(RECEIVER):])
+					view.onSubmit(e.Text(), receive.Text())
 				}
-				e.SetText(MESSAGE)
-				receive.SetText(RECEIVER)
+				e.SetText("")
 			}
 		}
 	})
 
-	inputBox := tui.NewHBox(receive,input)
-	inputBox.SetBorder(true)
-	inputBox.SetSizePolicy(tui.Expanding, tui.Maximum)
-
-	chat := tui.NewVBox(historyBox,inputBox)
+	chat := tui.NewVBox(historyBox,form)
 	chat.SetSizePolicy(tui.Expanding,tui.Expanding)
 
 	content := tui.NewHBox(sidebar,chat,)
@@ -166,4 +176,9 @@ func (c *ChatView) AddMessage(user string, msg string, time string) {
 func (c *ChatView) SetName(name string)  {
 	c.name.SetText(fmt.Sprintf("Username: %s",name))
 }
+
+func (c *ChatView) SetServerIp(address string){
+	c.serverIp.SetText(fmt.Sprintf("Server IP: %v",address))
+}
+
 

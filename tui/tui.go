@@ -10,6 +10,7 @@ version 1.0
 */
 
 var ch = make(chan struct{})
+var Server_ip = make(chan string)
 var ptr *string
 
 func StartUi(c client.ChatClient) {
@@ -67,6 +68,14 @@ func StartUi(c client.ChatClient) {
 		})
 		close(ch)
 		ptr = nil
+	}()
+
+	go func() {
+		address := <-Server_ip
+		ui.Update(func() {
+			chatView.SetServerIp(address)
+		})
+		close(Server_ip)
 	}()
 
 	if err := ui.Run(); err != nil {

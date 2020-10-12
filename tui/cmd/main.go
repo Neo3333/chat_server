@@ -24,6 +24,14 @@ func main(){
 	defer c.Close()
 
 	go c.Start()
+
+	go func() {
+		arr := make([]byte, len(*address))
+		copy(arr, *address)
+		ip := string(arr)
+		tui.Server_ip <- ip[:len(ip)-5]
+	}()
+
 	tui.StartUi(c)
 }
 
